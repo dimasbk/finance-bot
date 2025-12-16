@@ -1,0 +1,53 @@
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+*.log.*
+log.txt
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Build output (if added later)
+dist/
+build/
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# VSCode
+.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# Nodemon cache
+.nodemonignore
+
+# Optional: ignore ngrok if you store auth token
+ngrok.log
+ngrok.yml
+
+# Supabase auto-generated backups (if any)
+supabase/.temp/
+supabase/.branches/
+
+# Lock files (optional)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

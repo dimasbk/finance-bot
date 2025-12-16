@@ -1,0 +1,18 @@
+{
+  "name": "finance-bot",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon --watch src --ext js src/app.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.87.3",
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
