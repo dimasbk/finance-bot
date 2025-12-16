@@ -1,27 +1,36 @@
 import { supabase } from "../db.js";
 import { extractQuoted } from "../utils/parseQuoted.js";
+import { dbLog, error } from "../utils/logger.js";
 
 export async function addBill(text) {
-    const item = extractQuoted(text);
-    if (!item) return `Use quotes: bill "wifi rumah" 350000/mo due:10`;
+    const parts = text.split("-").map(p => p.trim());
 
-    const cleaned = text.replace(/"[^"]+"/, "").trim();
-    const parts = cleaned.split(" ");
+    const item = parts[1].replace(/"/g, "");
+    const amount = parseInt(parts[2]);
+    const dueDay = parseInt(parts[3].split(":")[1]);
 
-    const amount = parseInt(parts[1]);
-    const billing_day = parseInt(parts[2].split(":")[1]);
+    const payload = { item, amount, billing_day: dueDay };
 
-    await supabase.from("bills").insert({
-        item,
-        amount,
-        billing_day
-    });
+    dbLog("INSERT bills:", payload);
 
-    return `Added bill: ${item} — ${amount}/mo (due ${billing_day})`;
+    const { error: dbError } = await supabase.from("bills").insert(payload);
+    if (dbError) {
+        error("Supabase INSERT error:", dbError);
+        return "Failed to add bill.";
+    }
+
+    return `Added bill: ${item} — ${amount}/mo (due ${dueDay})`;
 }
 
 export async function listBills() {
-    const { data } = await supabase.from("bills").select("*");
+    dbLog("SELECT bills");
+
+    const { data, error: dbError } = await supabase.from("bills").select("*");
+
+    if (dbError) {
+        error("Supabase SELECT error:", dbError);
+        return "Failed to fetch bills.";
+    }
 
     if (!data.length) return "No recurring bills.";
 
@@ -34,6 +43,8 @@ export async function listBills() {
 }
 
 export async function deleteBillById(id) {
+    dbLog("DELETE bill with id:", id);
+
     await supabase.from("bills").delete().eq("id", id);
     return `Deleted bill ${id}`;
 }
